@@ -11,3 +11,7 @@ class Arch(Enum):
     ARM = auto()
     MIPS = auto()
     Other = auto()
+
+class Port(Enum):
+    tcp = auto()
+    udp = auto()
