@@ -18,10 +18,11 @@ tasks = []
 futures = []
 scan = None
 
-def import_ad():
-    global target
+def ad():
+    global targets
     from build_460_models import networks
-    target = networks
+    targets = networks
+    print("imported {} targets".format(len(targets)))
 
 def scan_targets():
     global scan
@@ -47,7 +48,7 @@ def start_monitor():
             tasks.append(task)
 
 interface = OrderedDict([
-['Ingest model', import_ad],
+['Ingest model', ad],
 ['Run scans', scan_targets],
 ['Test SSH logins', ssh_scan],
 ['Record attack', None],
@@ -68,7 +69,7 @@ while(True):
         c = int(input("> "))
     except ValueError:
         print("That doesn't look like a valid entry")
-    if c:
+    if c is not None:
         try:
             f = interface[list(interface.keys())[c]]
         except IndexError:
