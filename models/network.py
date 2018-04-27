@@ -42,7 +42,7 @@ class NAT(object):
     @property
     def services(self):
         out = []
-        for host in self.host.values():
+        for host in self._hosts.values():
             for service_port in host._services:
                 if service_port in self._ports.keys() or service_port in self._nat.values():
                     out.append(host._services[service_port])
