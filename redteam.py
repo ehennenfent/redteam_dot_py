@@ -24,10 +24,11 @@ def import_ad():
     target = networks
 
 def scan_targets():
+    global scan
     import nmap
     nm = nmap.PortScanner()
     nm.scan('192.168.101.2-23,25-27', '1-9000')
-    global scan = nm
+    scan = nm
 
 def ssh_scan():
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
@@ -35,6 +36,8 @@ def ssh_scan():
             for service in network.services:
                 if service.protocol is Protocol.SSH:
                     futures.append(executor.submit(ssh_to_host, service.parent))
+        for future in concurrent.futures.as_completed(futures):
+            print("Finished scanning host")
 
 def start_monitor():
     for network in targets:

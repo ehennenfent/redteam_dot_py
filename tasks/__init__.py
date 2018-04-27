@@ -54,10 +54,12 @@ def ssh_to_host(host):
     s = pxssh.pxssh()
     successful = []
     for u, p in host.credentials:
+        print("Attempting to SSH to {} with creds {}".format(host.parent.ip, (u,p)))
         if s.login (host.parent.ip, u, p):
             s.sendline ('cat {}'.format(host.flag_path))
             s.prompt()
             print(s.before)
             print("Got into host {} with credentials {}".format(host.parent.ip, (u,p)))
             s.close()
-else:
+        else:
+            print("Login failed on {}".format(host.parent.ip))
