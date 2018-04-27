@@ -44,8 +44,12 @@ class NAT(object):
         out = []
         for host in self._hosts.values():
             for service_port in host._services:
-                if service_port in self._ports.keys() or service_port in self._nat.values():
-                    out.append(host._services[service_port])
+                if service_port in self._ports.keys():
+                    out.append((service_port, host._services[service_port]))
+                elif service_port in self._nat.values():
+                    for pt in self._nat:
+                        if self.nat[pt] == service_port:
+                            out.append((pt, host._services[service_port]))
         return out
 
     @property

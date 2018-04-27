@@ -34,11 +34,11 @@ def scan_targets():
 def ssh_scan():
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
         for network in targets:
-            for service in network.services:
+            for port, service in network.services:
                 if service.protocol is Protocol.SSH:
-                    futures.append(executor.submit(ssh_to_host, service.parent))
+                    futures.append(executor.submit(ssh_to_host, service.parent, port))
         for future in concurrent.futures.as_completed(futures):
-            print("Finished scanning host")
+            pass
 
 def start_monitor():
     for network in targets:
