@@ -3,8 +3,9 @@ from models.hosts import Host
 class NAT(object):
     router: Host = None
 
-    def __init__(self):
-        self.subnet = "192.168.*.*"
+    def __init__(self, ip):
+        self.ip = ip
+        self.subnet = "255.255.255.0"
         self.set_router(Host())
         self._hosts = {}
         self._ports = {}
@@ -37,7 +38,8 @@ class NAT(object):
 
     @property
     def __dict__(self):
-        return {'subnet': self.subnet,
+        return {'ip': self.ip,
+                'subnet': self.subnet,
                 'router': self.router,
                 '_hosts': self._hosts,
                 '_ports': self._ports,

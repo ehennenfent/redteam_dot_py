@@ -42,5 +42,6 @@ class Service(object):
     @property
     def __dict__(self):
         return {'name': self.name,
+                'local_ip': self.local_ip,
                 'protocol': self.protocol,
                 'credentials': self.credentials}
