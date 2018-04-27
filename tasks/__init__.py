@@ -1,6 +1,7 @@
 import threading
 import time
 import nmap
+from pexpect import pxssh
 
 log_lock = threading.RLock()
 
@@ -48,3 +49,15 @@ class MonitorTask(threading.Thread):
         with log_lock:
             with open('data/logs/uptime.log', 'a') as logfile:
                 logfile.write(to_log + '\n')
+
+def ssh_to_host(host):
+    s = pxssh.pxssh()
+    successful = []
+    for u, p in host.credentials:
+        if s.login (host.parent.ip, u, p):
+            s.sendline ('cat {}'.format(host.flag_path))
+            s.prompt()
+            print(s.before)
+            print("Got into host {} with credentials {}".format(host.parent.ip, (u,p)))
+            s.close()
+else:

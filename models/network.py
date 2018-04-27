@@ -39,6 +39,14 @@ class NAT(object):
     def get_host_by_port(self, port_num):
         return self._hosts[self._ports[port_num]]
 
+    def get_services(self):
+        out = []
+        for host in self.host.values():
+            for service_port in host._services:
+                if service_port in self._ports.keys() or service_port in self._nat.values():
+                    out.append(host._services[service_port])
+        return out
+
     @property
     def __dict__(self):
         return {'ip': self.ip,

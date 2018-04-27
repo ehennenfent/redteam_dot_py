@@ -17,6 +17,7 @@ class Host(object):
 
     def map_service(self, port, service):
         self._services[port] = service
+        service.set_parent(self)
 
     @property
     def __dict__(self):
@@ -33,11 +34,15 @@ class LinuxHost(Host):
     os = OS.Linux
 
 class Service(object):
+    parent = None
 
     def __init__(self, name, protocol, default_credentials=None):
         self.name = name
         self.protocol = protocol
         self.credentials = [] if default_credentials is None else [default_credentials]
+
+    def set_parent(self, parent):
+        self.parent = weakref.ref(parent)
 
     @property
     def __dict__(self):
