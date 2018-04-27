@@ -1,27 +1,23 @@
 from enum import Enum, auto
 
 class OS(Enum):
-    Windows = auto()
-    Linux = auto()
-    Other = auto()
+    Windows = "Windows"
+    Linux = "Linux"
+    Other = "Other"
 
 class Arch(Enum):
-    x86 = auto()
-    x64 = auto()
-    ARM = auto()
-    MIPS = auto()
-    Other = auto()
-
-class PortType(Enum):
-    TCP = auto()
-    UDP = auto()
+    x86 = "x86"
+    x64 = "x64"
+    ARM = "ARM"
+    MIPS = "MIPS"
+    Other = "Other"
 
 class Protocol(Enum):
-    SSH = auto()
-    FTP = auto()
-    DNS = auto()
-    HTTP = auto()
-    RDP = auto()
-    XMPP = auto()
-    SQL = auto()
-    OTHER = auto()
+    SSH = "SSH"
+    FTP = "FTP"
+    DNS = "DNS"
+    HTTP = "HTTP"
+    RDP = "RDP"
+    XMPP = "XMPP"
+    SQL = "SQL"
+    OTHER = "OTHER"

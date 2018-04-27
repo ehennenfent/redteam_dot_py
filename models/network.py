@@ -1,24 +1,4 @@
 from models.hosts import Host
-from data.enums import PortType
-
-class Port(object):
-    def __init__(self, num: int, t: PortType = PortType.TCP):
-        self.number = num
-        self.port_type = t
-
-    def __hash__(self):
-        return hash((self.number, self.port_type))
-
-    def __eq__(self, other):
-        return (self.number, self.port_type) == (other.number, other.port_type)
-
-    def __ne__(self, other):
-        return not(self == other)
-
-    @property
-    def __dict__(self):
-        return {'number': self.number, 'type': self.port_type}
-
 
 class NAT(object):
     router: Host = None
