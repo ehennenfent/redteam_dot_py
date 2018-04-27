@@ -36,6 +36,9 @@ class NAT(object):
             if host.local_ip == ip:
                 return host
 
+    def get_host_by_port(self, port_num):
+        return self._hosts[self._ports[port_num]]
+
     @property
     def __dict__(self):
         return {'ip': self.ip,

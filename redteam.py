@@ -1,4 +1,5 @@
 from collections import OrderedDict
+import
 
 header = """
 _________________________________________
@@ -10,8 +11,21 @@ _________________________________________
 _________________________________________
 """
 
+targets = []
+
+def import_ad():
+    global target
+    from build_460_models import networks
+    target = networks
+
+def scan_targets():
+    import nmap
+    nm = nmap.PortScanner()
+    nm.scan('192.168.101.2-23,25-27', '1-9000')
+
+
 interface = OrderedDict([
-['Ingest model', None],
+['Ingest model', import_ad],
 ['Run scans', None],
 ['Ingest scans', None],
 ['Record attack', None],

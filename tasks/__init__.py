@@ -8,7 +8,7 @@ class MonitorTask(threading.Thread):
 
     last_result = False
 
-    def __init__(self, ip_address, port, delay=1):
+    def __init__(self, ip_address, port, delay=15):
         threading.Thread.__init__(self)
         self.ip_address = ip_address
         self.port = port
