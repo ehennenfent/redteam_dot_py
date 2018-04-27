@@ -12,6 +12,16 @@ class Arch(Enum):
     MIPS = auto()
     Other = auto()
 
-class Port(Enum):
-    tcp = auto()
-    udp = auto()
+class PortType(Enum):
+    TCP = auto()
+    UDP = auto()
+
+class Protocol(Enum):
+    SSH = auto()
+    FTP = auto()
+    DNS = auto()
+    HTTP = auto()
+    RDP = auto()
+    XMPP = auto()
+    SQL = auto()
+    OTHER = auto()
