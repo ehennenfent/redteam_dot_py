@@ -31,6 +31,7 @@ Working:
 * Detecting when a host goes down or comes back up
 * Deploying attacks against all hosts
 * Deploying attacks against hosts after they come back up
+
 Future framework ideas:
 * Metasploit integration - generic metasploit attack that allows one to attach a metasploit model to a host
 * Nmap integration - automatically create network map from scan results
@@ -42,3 +43,6 @@ This project is not intended to act as a one-stop-shop for CTF tools. Rather, ne
 First, the framework needs to understand the network topography. You can specify this by creating a .py file in data/engagements. The file should export a list of networks called `networks`. See `460_ad.py` for an example.
 Next, run `python3 redteam.py` to start the interface. You can select a task in order to start it running in the background. Output is printed to `data.log.txt`. I suggest watching it via tail.
 By default, the framework includes tasks to monitor the uptime of services. You can attach attacks to each host. If the host goes offline and comes back up, any attached attacks will be automatically re-run. As you develop new attacks against hosts, you can create python files for each of them in the attacks directory. See `ssh_attack.py` for an example.
+
+
+Author's note: I wrote a lot of this code in a hurry right before the beginning of the CS 460 CTF, then refactored it to fit the intended structure after the fact. I haven't been able to test it quite as extensively post-refactor. Hopefully I didn't break anything.

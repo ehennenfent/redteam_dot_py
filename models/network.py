@@ -17,7 +17,7 @@ class NAT(object):
 
     @property
     def ports(self):
-        return list(self._ports.keys()) + self.router.ports
+        return list(self._ports.keys())
 
     def set_router(self, router):
         router.set_parent(self)

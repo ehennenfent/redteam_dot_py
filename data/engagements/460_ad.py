@@ -1,6 +1,7 @@
 from models.network import NAT
 from models.hosts import LinuxHost, WindowsHost, Service
 from data.enums import Protocol
+from attacks import ssh_cat_flag
 
 defaultpw = "Hack the planet!"
 networks = []
@@ -23,6 +24,7 @@ for i in range(2,28):
     linux.map_service(5222, Service("Jabber", Protocol.XMPP, default_credentials=('cs460', defaultpw)))
     linux.map_service(80, Service("WordPress/Joomla?", Protocol.HTTP, default_credentials=('cs460', defaultpw)))
     linux.map_service(3306, Service("MySQL", Protocol.SQL, default_credentials=('root', 'root')))
+    linux.add_attack(ssh_cat_flag.attack)
     network.map_host(linux, 2210, 22)
     network.map_host(linux, 2110, 21)
     network.map_host(linux, 2010, 20)

@@ -1,7 +1,9 @@
 from collections import OrderedDict
-from tasks import MonitorTask, ssh_to_host
-from data.enums import Protocol
+from tasks import MonitorTask
 import concurrent.futures
+import glob
+import importlib.util
+import pprint as pp
 
 header = """
 _________________________________________
@@ -16,43 +18,50 @@ _________________________________________
 targets = []
 tasks = []
 futures = []
-scan = None
 
-def ad():
+def import_from_filename(filename):
+    spec = importlib.util.spec_from_file_location("attack_mod", filename)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+def ingest_model():
     global targets
-    from build_460_models import networks
-    targets = networks
+    engagements = glob.glob('data/engagements/*.py')
+    for index, engagement in enumerate(engagements):
+        print(index, " -- ", engagement)
+    index = int(input("Select an engagement> "))
+    ns = import_from_filename(engagements[index])
+    targets = ns.networks
     print("imported {} targets".format(len(targets)))
 
-def scan_targets():
-    global scan
-    import nmap
-    nm = nmap.PortScanner()
-    nm.scan('192.168.101.2-23,25-27', '1-9000')
-    scan = nm
-
-def ssh_scan():
+def attack_all_hosts():
+    attacks = glob.glob('attacks/*.py')
+    for index, attack in enumerate(attacks):
+        print(index, " -- ", attack)
+    index = int(input("Select an attack> "))
+    ns = import_from_filename(attacks[index])
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
         for network in targets:
-            for port, service in network.services:
-                if service.protocol is Protocol.SSH:
-                    futures.append(executor.submit(ssh_to_host, service.parent, port))
+            for host in network.hosts:
+                futures.append(executor.submit(ns.attack, host))
         for future in concurrent.futures.as_completed(futures):
-            pass
+            print("Attack Complete")
 
+#TODO: only works for NAT networks, not flat
 def start_monitor():
     for network in targets:
         for port in network.ports:
-            task = MonitorTask(network.ip, port)
+            task = MonitorTask(network.get_host_by_port(port), network.ip, port)
             task.start()
             tasks.append(task)
 
 interface = OrderedDict([
-['Ingest model', ad],
-['Run scans', scan_targets],
-['Test SSH logins', ssh_scan],
-['Record attack', None],
+['Ingest model', ingest_model],
+['Run attack on all hosts', attack_all_hosts],
 ['Start monitoring hosts', start_monitor],
+['Print targets', lambda: pp.pprint(targets)],
+['Print help', None],
 ['Exit', exit]
 ])
 
@@ -62,6 +71,7 @@ def print_interface():
 
 print(header)
 print_interface()
+interface['Print help'] = print_interface
 
 while(True):
     f, c = None, None

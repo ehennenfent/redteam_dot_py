@@ -1,7 +1,7 @@
 import threading
 import time
 import nmap
-# from pexpect import pxssh
+from pexpect import pxssh
 
 log_lock = threading.RLock()
 
@@ -9,11 +9,12 @@ class MonitorTask(threading.Thread):
 
     last_result = False
 
-    def __init__(self, ip_address, port, delay=15):
+    def __init__(self, host, ip_address, port, delay=15):
         threading.Thread.__init__(self)
         self.ip_address = ip_address
         self.port = port
         self.delay = delay
+        self.host = host
 
     def run(self):
         while True:
@@ -44,23 +45,28 @@ class MonitorTask(threading.Thread):
 
     def host_back_online(self):
         self.log("Port {} on IP {} came up".format(self.port, self.ip_address))
+        for attack in self.host.attacks:
+            attack(self.host)
 
     def log(self, to_log):
         with log_lock:
             with open('data/logs/uptime.log', 'a') as logfile:
                 logfile.write(to_log + '\n')
 
-def ssh_to_host(host, port=22):
-    s = None # pxssh.pxssh()
-    successful = []
+def ssh_to_host(host, cmd='', port=22):
+    s = pxssh.pxssh()
     for u, p in host.credentials:
         print("Attempting to SSH to {} with creds {}".format(host.parent.ip, (u,p)))
         if s.login (host.parent.ip, u, p, port=port):
-            s.sendline ('cat {}'.format(host.flag_path))
+            s.sendline (cmd)
             s.prompt()
-            print(s.before)
+            with log_lock:
+                with open('data/logs/attacks.log', 'a') as logfile:
+                    logfile.write(s.before + '\n')
             print("Got into host {} with credentials {}".format(host.parent.ip, (u,p)))
             s.close()
+            break
         else:
             print("Login failed on {}".format(host.parent.ip))
     print("SSH run complete on {}:{}".format(host.parent.ip, port))
+    return s.before

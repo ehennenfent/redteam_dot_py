@@ -4,6 +4,7 @@ from data.enums import OS
 
 class Host(object):
     parent = None
+    attacks = []
     _services = {}
     os = OS.Other
 
@@ -27,6 +28,9 @@ class Host(object):
                 'flag_path': self.flag_path,
                 '_services': self._services}
 
+    def add_attack(self, attack_function_pointer):
+        self.attacks.append(attack_function_pointer)
+
 class WindowsHost(Host):
     os = OS.Windows
 
@@ -47,6 +51,5 @@ class Service(object):
     @property
     def __dict__(self):
         return {'name': self.name,
-                'local_ip': self.local_ip,
                 'protocol': self.protocol,
                 'credentials': self.credentials}
